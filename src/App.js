@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import UserForm from "./UserForm";
+import UserTable from "./UserTable";
+import "./styles.css";
 
-function App() {
+
+const App = () => {
+  const [users, setUsers] = useState([]);
+  const [editingUser, setEditingUser] = useState(null);
+
+  const handleAddUser = (user) => {
+    user.id = Date.now();
+    setUsers([...users, user]);
+  };
+
+  const handleUpdateUser = (updatedUser) => {
+    const updatedUsers = users.map((user) =>
+      user.id === updatedUser.id ? updatedUser : user
+    );
+    setUsers(updatedUsers);
+    setEditingUser(null);
+  };
+
+  const handleDeleteUser = (userToDelete) => {
+    const updatedUsers = users.filter((user) => user.id !== userToDelete.id);
+    setUsers(updatedUsers);
+    setEditingUser(null);
+  };
+
+  const handleEditUser = (userToEdit) => {
+    setEditingUser(userToEdit);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      
+      <h1>React JS Class </h1>
+      <p>Python might be all the rate…but we’ve got something even better</p>
+      <UserForm user={editingUser} onAdd={handleAddUser} onUpdate={handleUpdateUser} />
+      <UserTable users={users} onEdit={handleEditUser} onDelete={handleDeleteUser} />
     </div>
   );
-}
+};
 
 export default App;
